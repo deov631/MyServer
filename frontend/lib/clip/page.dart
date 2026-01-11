@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend/clip/provider.dart';
+import 'package:frontend/widget/floating.dart';
 
 class ClipboardPage extends StatefulWidget {
   const ClipboardPage({super.key});
@@ -47,7 +48,7 @@ class _ClipboardPageState extends State<ClipboardPage> {
     final clipboardId = _titleController.text.trim();
 
     await provider.getClipboard(clipboardId);
-    
+
     if (provider.currentClipboard != null) {
       _contentController.text = provider.currentClipboard!.content;
       _showMessage('下载成功');
@@ -96,79 +97,100 @@ class _ClipboardPageState extends State<ClipboardPage> {
     return Consumer<ClipboardProvider>(
       builder: (context, provider, child) {
         return Scaffold(
-          appBar: AppBar(
-            title: const Text('Clipboard'),
-          ),
+          appBar: null,
           body: Stack(
             children: [
               Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 40,
+                  vertical: 30,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     // 标题输入框和按钮行
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            controller: _titleController,
-                            decoration: const InputDecoration(
-                              hintText: '请输入剪切板编号',
-                              border: OutlineInputBorder(),
-                              contentPadding: EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 8,
+                    FloatingCard(
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: _titleController,
+                              decoration: const InputDecoration(
+                                labelText: 'Clipboard ID',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(8),
+                                  ),
+                                ),
+                                contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 8,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        const SizedBox(width: 8),
-                        // 上传按钮
-                        IconButton(
-                          icon: const Icon(Icons.upload, color: Colors.white),
-                          onPressed: provider.isLoading ? null : _handleUpload,
-                          tooltip: '上传',
-                          style: IconButton.styleFrom(
-                            backgroundColor: Colors.blue,
-                            disabledBackgroundColor: Colors.grey,
+                          const SizedBox(width: 8),
+                          // 上传按钮
+                          IconButton(
+                            icon: const Icon(Icons.upload, color: Colors.white),
+                            onPressed: provider.isLoading
+                                ? null
+                                : _handleUpload,
+                            tooltip: '上传',
+                            style: IconButton.styleFrom(
+                              backgroundColor: Colors.blue,
+                              disabledBackgroundColor: Colors.grey,
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 4),
-                        // 下载按钮
-                        IconButton(
-                          icon: const Icon(Icons.download, color: Colors.white),
-                          onPressed: provider.isLoading ? null : _handleDownload,
-                          tooltip: '下载',
-                          style: IconButton.styleFrom(
-                            backgroundColor: Colors.green,
-                            disabledBackgroundColor: Colors.grey,
+                          const SizedBox(width: 4),
+                          // 下载按钮
+                          IconButton(
+                            icon: const Icon(
+                              Icons.download,
+                              color: Colors.white,
+                            ),
+                            onPressed: provider.isLoading
+                                ? null
+                                : _handleDownload,
+                            tooltip: '下载',
+                            style: IconButton.styleFrom(
+                              backgroundColor: Colors.green,
+                              disabledBackgroundColor: Colors.grey,
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 4),
-                        // 删除按钮
-                        IconButton(
-                          icon: const Icon(Icons.delete, color: Colors.white),
-                          onPressed: provider.isLoading ? null : _handleDelete,
-                          tooltip: '删除',
-                          style: IconButton.styleFrom(
-                            backgroundColor: Colors.red,
-                            disabledBackgroundColor: Colors.grey,
+                          const SizedBox(width: 4),
+                          // 删除按钮
+                          IconButton(
+                            icon: const Icon(Icons.delete, color: Colors.white),
+                            onPressed: provider.isLoading
+                                ? null
+                                : _handleDelete,
+                            tooltip: '删除',
+                            style: IconButton.styleFrom(
+                              backgroundColor: Colors.red,
+                              disabledBackgroundColor: Colors.grey,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 16),
-                    // 大的文本输入区域
+                    // 文本输入区域
                     Expanded(
-                      child: TextField(
-                        controller: _contentController,
-                        maxLines: null,
-                        expands: true,
-                        textAlignVertical: TextAlignVertical.top,
-                        decoration: const InputDecoration(
-                          hintText: '请输入内容',
-                          border: OutlineInputBorder(),
-                          contentPadding: EdgeInsets.all(12),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        child: TextField(
+                          controller: _contentController,
+                          maxLines: null,
+                          expands: true,
+                          textAlignVertical: TextAlignVertical.top,
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'Clipboard content here...',
+                          ),
                         ),
                       ),
                     ),
@@ -179,9 +201,7 @@ class _ClipboardPageState extends State<ClipboardPage> {
               if (provider.isLoading)
                 Container(
                   color: Colors.black26,
-                  child: const Center(
-                    child: CircularProgressIndicator(),
-                  ),
+                  child: const Center(child: CircularProgressIndicator()),
                 ),
             ],
           ),

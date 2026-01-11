@@ -4,13 +4,13 @@ import 'package:frontend/clip/model.dart';
 import 'package:frontend/config/api.dart';
 
 class ClipboardService {
-  static String get baseUrl => ApiConfig.baseUrl;
+  static String get baseUrl => '${ApiConfig.baseUrl}/clip';
   
   // GET /{clipboard_id} - 获取剪贴板内容
   Future<ClipboardModel?> getClipboard(String clipboardId) async {
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/clip/$clipboardId'),
+        Uri.parse('$baseUrl/$clipboardId'),
         headers: {'Content-Type': 'application/json'},
       );
 
@@ -29,7 +29,7 @@ class ClipboardService {
   Future<bool> uploadClipboard(String clipboardId, String content) async {
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/clip/$clipboardId'),
+        Uri.parse('$baseUrl/$clipboardId'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'id': clipboardId,
@@ -51,7 +51,7 @@ class ClipboardService {
   Future<bool> deleteClipboard(String clipboardId) async {
     try {
       final response = await http.delete(
-        Uri.parse('$baseUrl/clip/$clipboardId'),
+        Uri.parse('$baseUrl/$clipboardId'),
         headers: {'Content-Type': 'application/json'},
       );
 
