@@ -1,16 +1,21 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:frontend/clip/model.dart';
-import 'package:frontend/config/api.dart' as api_config;
+import 'package:frontend/config/api.dart';
 
 class ClipboardService {
-  static String get baseUrl => 'http://${api_config.baseUrl}/api/clip';
+  // 使用异步方法获取基础URL
+  static Future<String> getBaseUrl() async {
+    final baseUrl = await ApiConfig.getBaseUrl();
+    return 'http://$baseUrl/api/clip';
+  }
   
   // GET /{clipboard_id} - 获取剪贴板内容
   Future<ClipboardModel?> getClipboard(String clipboardId) async {
     try {
+      final url = await getBaseUrl();
       final response = await http.get(
-        Uri.parse('$baseUrl/$clipboardId'),
+        Uri.parse('$url/$clipboardId'),
         headers: {'Content-Type': 'application/json'},
       );
 
@@ -28,8 +33,9 @@ class ClipboardService {
   // POST /{clipboard_id} - 上传/更新剪贴板内容
   Future<bool> uploadClipboard(String clipboardId, String content) async {
     try {
+      final url = await getBaseUrl();
       final response = await http.post(
-        Uri.parse('$baseUrl/$clipboardId'),
+        Uri.parse('$url/$clipboardId'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'id': clipboardId,
@@ -50,8 +56,9 @@ class ClipboardService {
   // DELETE /{clipboard_id} - 删除剪贴板内容
   Future<bool> deleteClipboard(String clipboardId) async {
     try {
+      final url = await getBaseUrl();
       final response = await http.delete(
-        Uri.parse('$baseUrl/$clipboardId'),
+        Uri.parse('$url/$clipboardId'),
         headers: {'Content-Type': 'application/json'},
       );
 
