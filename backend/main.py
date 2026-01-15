@@ -2,10 +2,10 @@ from fastapi import FastAPI
 from starlette.responses import FileResponse
 from starlette.staticfiles import StaticFiles
 
-from clipboard.route import router as clipboard_router
+from app.clip.route import router as clipboard_router
 
 app = FastAPI()
-app.include_router(clipboard_router, prefix="/clip")
+app.include_router(clipboard_router, prefix="/api/clip")
 
 @app.get("/")
 async def root():

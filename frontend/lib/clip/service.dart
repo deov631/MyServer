@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:frontend/clip/model.dart';
-import 'package:frontend/config/api.dart';
+import 'package:frontend/config/api.dart' as api_config;
 
 class ClipboardService {
-  static String get baseUrl => '${ApiConfig.baseUrl}/clip';
+  static String get baseUrl => 'http://${api_config.baseUrl}/api/clip';
   
   // GET /{clipboard_id} - 获取剪贴板内容
   Future<ClipboardModel?> getClipboard(String clipboardId) async {
