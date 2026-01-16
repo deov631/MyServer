@@ -1,13 +1,15 @@
+from collections import OrderedDict
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 router = APIRouter()
 
-clipboards = {}
+clipboards = OrderedDict()
+MAX_CLIPBOARDS = 20
 
 class Clipboard(BaseModel):
-    id: str
-    content: str
+    id: str = Field(max_length=4)
+    content: str = Field(max_length=100000)
 
 @router.get("/{clipboard_id}")
 async def get_clipboard(clipboard_id: str):
@@ -19,6 +21,8 @@ async def get_clipboard(clipboard_id: str):
 @router.post("/{clipboard_id}")
 async def set_clipboard(clipboard_id: str, clipboard: Clipboard):
     clipboards[clipboard_id] = clipboard.content
+    if len(clipboards) > MAX_CLIPBOARDS:
+        clipboards.popitem(last=False)
     return {"message": "Clipboard updated"}
 
 @router.delete("/{clipboard_id}")
