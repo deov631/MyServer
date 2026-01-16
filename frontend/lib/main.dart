@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/home.dart';
 import 'package:provider/provider.dart';
-import 'package:frontend/clip/provider.dart';
+import 'package:frontend/app/clip/provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ClipboardProvider()),
       ],
       child: MaterialApp(
-        title: 'Deov.cn',
+        title: 'deov.cn',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
         ),

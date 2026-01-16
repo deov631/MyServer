@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:frontend/clip/model.dart';
 import 'package:frontend/config/api.dart';
+import 'model.dart';
 
 class ClipboardService {
   // 使用异步方法获取基础URL
