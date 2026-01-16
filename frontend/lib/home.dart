@@ -15,47 +15,57 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> with ResponsiveLayout {
   int _selectedIndex = 0;
 
+  final List<Map<String, dynamic>> _navItems = [
+    {
+      'icon': Icons.home,
+      'title': '主页',
+      'build': HomePage(),
+    },
+    {
+      'icon': Icons.apps,
+      'title': '应用',
+      'build': ListPage(),
+    },
+    {
+      'icon': Icons.monitor_heart,
+      'title': '监控',
+      'build': MonitorPage(),
+    },
+    {
+      'icon': Icons.settings,
+      'title': '设置',
+      'build': SettingsPage(),
+    },
+  ];
+
   @override
   Widget buildDesktop(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Row(
           children: [
-            NavigationRail(
-              destinations: const [
-                NavigationRailDestination(
-                  icon: Icon(Icons.home),
-                  label: Text('Home'),
-                ),
-                NavigationRailDestination(
-                  icon: Icon(Icons.apps),
-                  label: Text('Applications'),
-                ),
-                NavigationRailDestination(
-                  icon: Icon(Icons.monitor_heart),
-                  label: Text('Monitor'),
-                ),
-                NavigationRailDestination(
-                  icon: Icon(Icons.settings),
-                  label: Text('Settings'),
-                ),
-              ],
-              selectedIndex: _selectedIndex,
-              onDestinationSelected: (index) {
-                setState(() {
-                  _selectedIndex = index;
-                });
-              },
+            SizedBox(
+              width: 80,
+              child: NavigationRail(
+                selectedIndex: _selectedIndex,
+                groupAlignment: 0.0,
+                labelType: NavigationRailLabelType.selected,
+                onDestinationSelected: _onDestinationSelected,
+                destinations: [
+                  ...List.generate(
+                    _navItems.length,
+                    (index) => NavigationRailDestination(
+                      icon: Icon(_navItems[index]['icon']),
+                      label: Text(_navItems[index]['title']),
+                    ),
+                  ),
+                ],
+              ),
             ),
             Expanded(
               child: IndexedStack(
                 index: _selectedIndex,
-                children: [
-                  _buildHomePage(context),
-                  _buildListPage(context),
-                  _buildMonitorPage(context),
-                  _buildSettingsPage(context),
-                ],
+                children: _navItems.map((item) => item['build'] as Widget).toList(),
               ),
             )
           ],
@@ -67,30 +77,39 @@ class _MyHomePageState extends State<MyHomePage> with ResponsiveLayout {
   @override
   Widget buildMobile(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: TextButton(
-          onPressed: () {
-            Navigator.of(context).pushNamed('/page2');
-          },
-          child: const Text('Go to page 2'),
-        ),
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _navItems.map((item) => item['build'] as Widget).toList(),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        currentIndex: _selectedIndex,
+        onTap: _onDestinationSelected,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: '主页',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.apps),
+            label: '应用',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.monitor_heart),
+            label: '监控',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: '设置',
+          ),
+        ],
       ),
     );
   }
   
-  Widget _buildHomePage(BuildContext context) {
-    return HomePage();
-  }
-  
-  Widget _buildListPage(BuildContext context) {
-    return ListPage();
-  }
-  
-  Widget _buildMonitorPage(BuildContext context) {
-    return MonitorPage();
-  }
-  
-  Widget _buildSettingsPage(BuildContext context) {
-    return SettingsPage();
+  void _onDestinationSelected(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 }
