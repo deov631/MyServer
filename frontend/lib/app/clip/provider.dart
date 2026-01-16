@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/clip/service.dart';
-import 'package:frontend/clip/model.dart';
+import 'service.dart';
+import 'model.dart';
 
 class ClipboardProvider with ChangeNotifier {
   final ClipboardService _service = ClipboardService();

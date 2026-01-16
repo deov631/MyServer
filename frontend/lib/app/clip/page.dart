@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:frontend/clip/provider.dart';
 import 'package:frontend/widget/floating.dart';
+import 'provider.dart';
 
 class ClipboardPage extends StatefulWidget {
   const ClipboardPage({super.key});
