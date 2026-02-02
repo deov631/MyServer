@@ -12,7 +12,7 @@ class MyHomePage extends StatefulWidget {
   State<StatefulWidget> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> with ResponsiveLayout {
+class _MyHomePageState extends State<MyHomePage> with MyResponsiveLayoutStatefulMixin {
   int _selectedIndex = 0;
 
   final List<Map<String, dynamic>> _navItems = [
@@ -77,10 +77,7 @@ class _MyHomePageState extends State<MyHomePage> with ResponsiveLayout {
   @override
   Widget buildMobile(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: _navItems.map((item) => item['build'] as Widget).toList(),
-      ),
+      body: const HomePage(),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: _selectedIndex,

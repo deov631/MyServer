@@ -97,7 +97,10 @@ class _ClipboardPageState extends State<ClipboardPage> {
     return Consumer<ClipboardProvider>(
       builder: (context, provider, child) {
         return Scaffold(
-          appBar: null,
+          appBar: AppBar(
+            title: const Text('Clipboard Manager'),
+            automaticallyImplyLeading: true,
+          ),
           body: Stack(
             children: [
               Padding(
@@ -109,70 +112,84 @@ class _ClipboardPageState extends State<ClipboardPage> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     // 标题输入框和按钮行
-                    FloatingCard(
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              controller: _titleController,
-                              decoration: const InputDecoration(
-                                labelText: 'Clipboard ID',
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(8),
+                      MyFloatingContainer(
+                        color: Theme.of(context).primaryColorLight,
+                        borderRadius: BorderRadius.circular(12),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: TextField(
+                                  controller: _titleController,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Clipboard ID',
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(8),
+                                      ),
+                                    ),
+                                    contentPadding: EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                      vertical: 8,
+                                    ),
                                   ),
                                 ),
-                                contentPadding: EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 8,
+                              ),
+                              const SizedBox(width: 8),
+                              // 上传按钮
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.upload,
+                                  color: Colors.white,
+                                ),
+                                onPressed: provider.isLoading
+                                    ? null
+                                    : _handleUpload,
+                                tooltip: '上传',
+                                style: IconButton.styleFrom(
+                                  backgroundColor: Colors.blue,
+                                  disabledBackgroundColor: Colors.grey,
                                 ),
                               ),
-                            ),
+                              const SizedBox(width: 4),
+                              // 下载按钮
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.download,
+                                  color: Colors.white,
+                                ),
+                                onPressed: provider.isLoading
+                                    ? null
+                                    : _handleDownload,
+                                tooltip: '下载',
+                                style: IconButton.styleFrom(
+                                  backgroundColor: Colors.green,
+                                  disabledBackgroundColor: Colors.grey,
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              // 删除按钮
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.delete,
+                                  color: Colors.white,
+                                ),
+                                onPressed: provider.isLoading
+                                    ? null
+                                    : _handleDelete,
+                                tooltip: '删除',
+                                style: IconButton.styleFrom(
+                                  backgroundColor: Colors.red,
+                                  disabledBackgroundColor: Colors.grey,
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(width: 8),
-                          // 上传按钮
-                          IconButton(
-                            icon: const Icon(Icons.upload, color: Colors.white),
-                            onPressed: provider.isLoading
-                                ? null
-                                : _handleUpload,
-                            tooltip: '上传',
-                            style: IconButton.styleFrom(
-                              backgroundColor: Colors.blue,
-                              disabledBackgroundColor: Colors.grey,
-                            ),
-                          ),
-                          const SizedBox(width: 4),
-                          // 下载按钮
-                          IconButton(
-                            icon: const Icon(
-                              Icons.download,
-                              color: Colors.white,
-                            ),
-                            onPressed: provider.isLoading
-                                ? null
-                                : _handleDownload,
-                            tooltip: '下载',
-                            style: IconButton.styleFrom(
-                              backgroundColor: Colors.green,
-                              disabledBackgroundColor: Colors.grey,
-                            ),
-                          ),
-                          const SizedBox(width: 4),
-                          // 删除按钮
-                          IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.white),
-                            onPressed: provider.isLoading
-                                ? null
-                                : _handleDelete,
-                            tooltip: '删除',
-                            style: IconButton.styleFrom(
-                              backgroundColor: Colors.red,
-                              disabledBackgroundColor: Colors.grey,
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
                     ),
                     const SizedBox(height: 16),
                     // 文本输入区域

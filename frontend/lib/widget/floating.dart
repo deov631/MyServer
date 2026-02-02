@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-class FloatingCard extends StatefulWidget {
-  final Color? color;
+class MyFloatingContainer extends StatefulWidget {
   final Color shadowColor;
   final double blurRadius;
   final double spreadRadius;
@@ -10,33 +9,30 @@ class FloatingCard extends StatefulWidget {
   final double activeSpreadRadius;
   final Offset activeOffset;
   final Duration duration;
-  final BorderRadius borderRadius;
-  final EdgeInsets padding;
-  final EdgeInsets margin;
+  final Color? color;
+  final BorderRadius? borderRadius;
   final Widget child;
-  const FloatingCard({
+
+  const MyFloatingContainer({
     super.key,
-    this.color,
-    this.shadowColor = Colors.black38,
+    this.shadowColor = Colors.black12,
     this.blurRadius = 2,
-    this.spreadRadius = 1,
-    this.offset = const Offset(1, 2),
-    this.activeBlurRadius = 3,
-    this.activeSpreadRadius = 2,
-    this.activeOffset = const Offset(2, 4),
+    this.spreadRadius = 0.5,
+    this.offset = const Offset(1, 1),
+    this.activeBlurRadius = 5.0,
+    this.activeSpreadRadius = 1.0,
+    this.activeOffset = const Offset(2, 2),
     this.duration = const Duration(milliseconds: 200),
-    this.borderRadius = const BorderRadius.all(Radius.circular(20)),
-    this.padding = const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-    this.margin = const EdgeInsets.all(0),
+    this.color,
+    this.borderRadius,
     required this.child,
   });
 
   @override
-  State<StatefulWidget> createState() => _FloatingCardState();
+  State<StatefulWidget> createState() => _MyFloatingContainerState();
 }
 
-class _FloatingCardState extends State<FloatingCard> {
-
+class _MyFloatingContainerState extends State<MyFloatingContainer> {
   bool _isHovering = false;
 
   @override
@@ -47,19 +43,21 @@ class _FloatingCardState extends State<FloatingCard> {
       child: AnimatedContainer(
         duration: Duration(milliseconds: 200),
         decoration: BoxDecoration(
-          color: widget.color ?? Theme.of(context).cardColor,
           borderRadius: widget.borderRadius,
+          color: widget.color,
           boxShadow: [
             BoxShadow(
               color: widget.shadowColor,
-              blurRadius: _isHovering ? widget.activeBlurRadius : widget.blurRadius,
-              spreadRadius: _isHovering ? widget.activeSpreadRadius : widget.spreadRadius,
+              blurRadius: _isHovering
+                  ? widget.activeBlurRadius
+                  : widget.blurRadius,
+              spreadRadius: _isHovering
+                  ? widget.activeSpreadRadius
+                  : widget.spreadRadius,
               offset: _isHovering ? widget.activeOffset : widget.offset,
             ),
           ],
         ),
-        padding: widget.padding,
-        margin: widget.margin,
         child: widget.child,
       ),
     );
@@ -75,5 +73,95 @@ class _FloatingCardState extends State<FloatingCard> {
     setState(() {
       _isHovering = false;
     });
+  }
+}
+
+class MyFloatingCard extends StatefulWidget {
+  final double height;
+  final String title;
+  final TextStyle titleStyle;
+  final Color color1;
+  final Color color2;
+  final Widget? child;
+  final VoidCallback? onTap;
+
+  const MyFloatingCard({
+    super.key,
+    this.height = 150,
+    required this.title,
+    this.titleStyle = const TextStyle(
+      color: Colors.white,
+      fontSize: 16,
+      fontWeight: FontWeight.bold,
+    ),
+    required this.color1,
+    required this.color2,
+    this.onTap,
+    this.child,
+  });
+
+  @override
+  State<StatefulWidget> createState() => _MyFloatingCardState();
+}
+
+class _MyFloatingCardState extends State<MyFloatingCard> {
+  bool _isHovering = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (PointerEvent event) {
+        setState(() {
+          _isHovering = true;
+        });
+      },
+      onExit: (PointerEvent event) {
+        setState(() {
+          _isHovering = false;
+        });
+      },
+      child: GestureDetector(
+        onTap: widget.onTap ?? () {
+          debugPrint("Tapped ${widget.title}");
+        },
+        child: AnimatedContainer(
+          duration: Duration(milliseconds: 200),
+          padding: const EdgeInsets.all(20),
+          margin: const EdgeInsets.all(10),
+          height: widget.height - 20,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [widget.color1, widget.color2],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: _isHovering ? Colors.black26 : Colors.black12,
+                blurRadius: _isHovering ? 5.0 : 2.0,
+                spreadRadius: _isHovering ? 1.0 : 0.5,
+                offset: _isHovering ? Offset(2, 2) : Offset(1, 1),
+              ),
+            ],
+          ),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  SizedBox(width: 10),
+                  Text(
+                    widget.title,
+                    style: widget.titleStyle,
+                  ),
+                  Spacer(),
+                ],
+              ),
+              if (widget.child != null) widget.child!,
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

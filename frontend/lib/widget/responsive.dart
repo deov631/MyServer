@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-mixin ResponsiveLayout<T extends StatefulWidget> on State<T> {
+mixin MyResponsiveLayoutStatefulMixin<T extends StatefulWidget> on State<T> {
   bool get isMobile => MediaQuery.of(context).size.width < MediaQuery.of(context).size.height;
   bool get isDesktop => !isMobile;
 
