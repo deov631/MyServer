@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class MonitorPage extends StatelessWidget {
-  const MonitorPage({super.key});
+class HomeMonitorPage extends StatelessWidget {
+  const HomeMonitorPage({super.key});
 
   @override
   Widget build(BuildContext context) {

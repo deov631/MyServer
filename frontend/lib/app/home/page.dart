@@ -1,139 +1,86 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/widget/floating.dart';
+import 'package:frontend/widget/responsive.dart';
 import 'package:go_router/go_router.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class HomeLayoutPage extends StatefulWidget {
+  final GoRouterState state;
+  final Widget child;
+
+  const HomeLayoutPage({super.key, required this.state, required this.child});
 
   @override
-  Widget build(BuildContext context) {
+  State<StatefulWidget> createState() => _HomeLayoutPageState();
+}
+
+class _HomeLayoutPageState extends State<HomeLayoutPage> with MyResponsiveLayoutStatefulMixin {
+  int get _selectedIndex {
+    final location = widget.state.uri.path;
+    for (int i = 0; i < _navItems.length; i++) {
+      if (_navItems[i]['route'] == location) {
+        return i;
+      }
+    }
+    return 0;
+  }
+
+  final List<Map<String, dynamic>> _navItems = [
+    {'icon': Icons.home, 'title': '主页', 'route': '/home'},
+    {'icon': Icons.apps, 'title': '应用', 'route': '/list'},
+    {'icon': Icons.monitor_heart, 'title': '监控', 'route': '/monitor'},
+    {'icon': Icons.settings, 'title': '设置', 'route': '/settings'},
+  ];
+
+  @override
+  Widget buildDesktop(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverPersistentHeader(
-            pinned: true,
-            delegate: CustomSliverAppBarDelegate(title: 'Welcome'),
-          ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(30, 20, 30, 400),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      SizedBox(width: 20),
-                      Expanded(
-                        child: MyFloatingCard(
-                          height: 300,
-                          title: 'README',
-                          color1: Colors.orangeAccent,
-                          color2: Colors.orange,
-                          onTap: () {
-                            debugPrint('Tapped README');
-                          },
-                        ),
-                      ),
-                      Expanded(
-                        child: MyFloatingCard(
-                          height: 300,
-                          title: 'Applications',
-                          color1: Colors.green[400]!,
-                          color2: Colors.green[700]!,
-                          onTap: () {
-                            context.push('/list');
-                          },
-                        ),
-                      ),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            MyFloatingCard(
-                              height: 150,
-                              title: 'Announcements',
-                              color1: Colors.grey[700]!,
-                              color2: Colors.grey[900]!,
-                              onTap: () {
-                                debugPrint('Tapped Announcements');
-                              },
-                            ),
-                            MyFloatingCard(
-                              height: 150,
-                              title: 'Monitoring',
-                              color1: Colors.blueAccent,
-                              color2: Colors.blue,
-                              onTap: () {
-                                debugPrint('Tapped Monitoring');
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(width: 20)
-                    ],
+      body: Row(
+        children: [
+          SizedBox(
+            width: 80,
+            child: NavigationRail(
+              selectedIndex: _selectedIndex,
+              groupAlignment: 0.0,
+              labelType: NavigationRailLabelType.selected,
+              onDestinationSelected: _onDestinationSelected,
+              destinations: [
+                ...List.generate(
+                  _navItems.length,
+                  (index) => NavigationRailDestination(
+                    icon: Icon(_navItems[index]['icon']),
+                    label: Text(_navItems[index]['title']),
                   ),
-                ],
-              )
+                ),
+              ],
+            ),
+          ),
+          Expanded(child: widget.child),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget buildMobile(BuildContext context) {
+    return Scaffold(
+      body: widget.child,
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        currentIndex: _selectedIndex,
+        onTap: _onDestinationSelected,
+        items: [
+          ...List.generate(
+            _navItems.length,
+            (index) => BottomNavigationBarItem(
+              icon: Icon(_navItems[index]['icon']),
+              label: _navItems[index]['title'],
             ),
           ),
         ],
       ),
     );
   }
-}
 
-class CustomSliverAppBarDelegate extends SliverPersistentHeaderDelegate {
-  final String title;
-
-  CustomSliverAppBarDelegate({required this.title});
-
-  @override
-  Widget build(
-    BuildContext context,
-    double shrinkOffset,
-    bool overlapsContent,
-  ) {
-    // 计算缩放比例
-    double maxExtentValue = maxExtent;
-    double minExtentValue = minExtent;
-    double progress = (shrinkOffset) / (maxExtentValue - minExtentValue);
-    progress = progress.clamp(0.0, 1.0); // 确保progress值在0到1之间
-
-    // 根据进度计算顶部边距，从200逐渐减少到0
-    double topPadding = 200.0 - (200.0 * progress);
-
-    return Container(
-      color: Theme.of(context).primaryColor,
-      height: maxExtentValue,
-
-      child: Padding(
-        padding: EdgeInsets.fromLTRB(0.0, topPadding, 0.0, 0.0),
-        child: Row(
-          children: [
-            Spacer(),
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 24.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            Spacer(flex: 2),
-          ],
-        ),
-      ),
-    );
-  }
-
-  @override
-  double get maxExtent => 300.0;
-
-  @override
-  double get minExtent => kToolbarHeight;
-
-  @override
-  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
-    return true;
+  void _onDestinationSelected(int index) {
+    context.go(_navItems[index]['route']);
   }
 }

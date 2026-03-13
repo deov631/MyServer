@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:frontend/widget/floating.dart';
 import 'package:go_router/go_router.dart';
+import 'package:frontend/platform/web/web_nav.dart';
 
-class ListPage extends StatelessWidget {
-  const ListPage({super.key});
+class HomeListPage extends StatelessWidget {
+  const HomeListPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +24,13 @@ class ListPage extends StatelessWidget {
               color1: Colors.redAccent,
               color2: Colors.red,
               onTap: () {
-                context.push('/clip');
+                if (kIsWeb) {
+                  // Web 平台，在新标签页打开
+                  openInNewTab('/#/clip');
+                } else {
+                  // 其他平台，正常 push
+                  context.push("/clip");
+                }
               },
             ),
           ],
