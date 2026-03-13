@@ -81,6 +81,10 @@ class _HomeLayoutPageState extends State<HomeLayoutPage> with MyResponsiveLayout
   }
 
   void _onDestinationSelected(int index) {
-    context.go(_navItems[index]['route']);
+    _navigateTo(_navItems[index]['route']);
+  }
+
+  void _navigateTo(String route) {
+    context.go(route);
   }
 }

@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:frontend/widget/floating.dart';
 
 class HomeMainPage extends StatelessWidget {
-  const HomeMainPage({super.key});
+  const HomeMainPage({super.key,});
 
   @override
   Widget build(BuildContext context) {

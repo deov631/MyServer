@@ -25,11 +25,9 @@ class HomeListPage extends StatelessWidget {
               color2: Colors.red,
               onTap: () {
                 if (kIsWeb) {
-                  // Web 平台，在新标签页打开
-                  openInNewTab('/#/clip');
+                  openInNewTab('/clip');
                 } else {
-                  // 其他平台，正常 push
-                  context.push("/clip");
+                  context.push('/clip');
                 }
               },
             ),

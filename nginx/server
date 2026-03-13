@@ -1,0 +1,28 @@
+server {
+    listen 12000;
+    server_name localhost;
+
+    root /var/www/server;
+    index index.html;
+
+    # /api 转发到FastAPI
+    location /api {
+        proxy_pass http://127.0.0.1:20000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+
+    # 处理 SPA 路由
+    location / {
+        # 尝试按顺序查找请求的URI作为文件、作为目录，
+        # 如果都找不到，就回退到 /index.html
+        try_files $uri $uri/ /index.html;
+    }
+
+    # 静态资源设置缓存策略
+    location /assets {
+        expires 30d;
+        add_header Cache-Control "public, immutable";
+    }
+}

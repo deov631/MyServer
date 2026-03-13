@@ -26,22 +26,18 @@ final GoRouter globalRouter = GoRouter(
       builder: (context, state, child) => HomeLayoutPage(state: state, child: child,),
       routes: [
         GoRoute(
-          parentNavigatorKey: homeLayoutNavigatorKey,
           path: '/home',
           builder: (context, state) => const HomeMainPage(),
         ),
         GoRoute(
-          parentNavigatorKey: homeLayoutNavigatorKey,
           path: '/list',
           builder: (context, state) => const HomeListPage(),
         ),
         GoRoute(
-          parentNavigatorKey: homeLayoutNavigatorKey,
           path: '/monitor',
           builder: (context, state) => const HomeMonitorPage(),
         ),
         GoRoute(
-          parentNavigatorKey: homeLayoutNavigatorKey,
           path: '/settings',
           builder: (context, state) => const HomeSettingsPage(),
         ),

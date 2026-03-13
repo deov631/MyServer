@@ -13,6 +13,7 @@ class Clipboard(BaseModel):
 
 @router.get("/{clipboard_id}")
 async def get_clipboard(clipboard_id: str):
+    """Get a clipboard"""
     if clipboard_id in clipboards:
         return Clipboard(id=clipboard_id, content=clipboards[clipboard_id])
     else:
@@ -20,6 +21,7 @@ async def get_clipboard(clipboard_id: str):
 
 @router.post("/{clipboard_id}")
 async def set_clipboard(clipboard_id: str, clipboard: Clipboard):
+    """Set a clipboard, creating it if it doesn't exist"""
     clipboards[clipboard_id] = clipboard.content
     if len(clipboards) > MAX_CLIPBOARDS:
         clipboards.popitem(last=False)
@@ -27,6 +29,7 @@ async def set_clipboard(clipboard_id: str, clipboard: Clipboard):
 
 @router.delete("/{clipboard_id}")
 async def delete_clipboard(clipboard_id: str):
+    """Delete a clipboard"""
     if clipboard_id in clipboards:
         del clipboards[clipboard_id]
         return {"message": "Clipboard deleted"}
