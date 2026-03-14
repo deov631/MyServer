@@ -17,8 +17,8 @@ async def get_cpu_usage():
         "percent": cpu_percent
     }
 
-@router.get("/mem")
-async def get_mem_usage():
+@router.get("/memory")
+async def get_memory_usage():
     """返回总内存使用率与已使用内存"""
     mem_info = await asyncio.to_thread(psutil.virtual_memory)
     return {
@@ -32,8 +32,8 @@ _internet_time: float | None = None
 _internet_sent: int | None = None
 _internet_recv: int | None = None
 
-@router.get("/internet")
-async def get_internet_usage():
+@router.get("/network")
+async def get_network_usage():
     """返回操作系统的下载速率与上传速率（MB/s）"""
     global _internet_time, _internet_sent, _internet_recv
     

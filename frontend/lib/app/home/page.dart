@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/widget/responsive.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'monitor/provider.dart' show HealthMonitorProvider;
 
 class HomeLayoutPage extends StatefulWidget {
   final GoRouterState state;
@@ -53,7 +55,7 @@ class _HomeLayoutPageState extends State<HomeLayoutPage> with MyResponsiveLayout
               ],
             ),
           ),
-          Expanded(child: widget.child),
+          buildChild(context),
         ],
       ),
     );
@@ -62,7 +64,7 @@ class _HomeLayoutPageState extends State<HomeLayoutPage> with MyResponsiveLayout
   @override
   Widget buildMobile(BuildContext context) {
     return Scaffold(
-      body: widget.child,
+      body: buildChild(context),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: _selectedIndex,
@@ -77,6 +79,15 @@ class _HomeLayoutPageState extends State<HomeLayoutPage> with MyResponsiveLayout
           ),
         ],
       ),
+    );
+  }
+
+  Widget buildChild(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => HealthMonitorProvider()),
+      ],
+      child: Expanded(child: widget.child),
     );
   }
 
